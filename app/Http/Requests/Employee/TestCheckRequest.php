@@ -29,6 +29,7 @@ class TestCheckRequest extends FormRequest
     public function rules()
     {
         return [
+            'employee_id'=> 'required|integer',
             'moderator_id'=> 'required|integer',
             'question_answers.*.question_id'=> 'required|integer',
             'question_answers.*.test_type'=> 'required|in:unique,multiple,closed',

@@ -86,6 +86,7 @@ class TestModeratorController extends AdminController
         
         return $this->sendResponse([
             'moderator_id' => $moderator_id,
+            'employee_id' => $request->employee_id,
             'questions' => new TestContentCollection($test_contents)
         ]);
     }
@@ -95,7 +96,8 @@ class TestModeratorController extends AdminController
     */
     public function testCheck(TestCheckRequest $request, TestCheckService $testcheckservices)
     {
-        if (!$test_moderator = DB::table("test_moderators")->whereNull("deleted_at")->find(\request("moderator_id")))
+
+        if (!$test_moderator = DB::table("test_moderators")->where("employee_id", \request("employee_id"))->find(\request("moderator_id")))
         {
             return $this->sendError(
                 [],
