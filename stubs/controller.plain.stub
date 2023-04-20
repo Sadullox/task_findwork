@@ -1,0 +1,103 @@
+<?php
+
+namespace {{ namespace }};
+
+// use {{ rootNamespace }}Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
+class {{ class }} extends AdminController
+{
+
+    protected $per_page;
+
+    public function __construct()
+    {
+        $this->per_page = request('per_page') ? request('per_page') : 25;
+    }
+
+    public function index()
+    {
+        $list = DB::table('table_name')
+        // ->where('deleted_at',null)
+        ->paginate($this->per_page);
+
+        return $this->sendResponseList($list);
+    }
+
+    public function store(Request $request)
+    {
+        DB::table('table_name')->insert([
+            'field' => $request->input('field'),
+        ]);
+
+        return $this->sendResponse();
+    }
+
+    public function show($id)
+    {
+        $model = DB::table('table_name')
+        // ->where('deleted_at',null)
+        ->find($id);
+        
+        if (!$model)
+        {
+            return $this->sendError(
+                [],
+                'Malumot topilmadi',
+                404
+            );
+        }
+
+        return $this->sendResponse($model);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $model = DB::table('table_name')
+        // ->where('deleted_at',null)
+        ->find($id);
+        
+        if (!$model)
+        {
+            return $this->sendError(
+                [],
+                'Malumot topilmadi',
+                404
+            );
+        }
+        
+        DB::table('table_name')
+        ->where('id', $id)
+        ->update([
+            'field' => $request->input('field'),
+        ]); 
+
+        return $this->sendResponse();
+    }
+
+    public function destroy($id)
+    {
+        $model = DB::table('table_name')
+        // ->where('deleted_at',null)
+        ->find($id);
+        
+        if (!$model)
+        {
+            return $this->sendError(
+                [],
+                'Malumot topilmadi',
+                404
+            );
+        }
+
+        DB::table('table_name')
+        ->where('id', $id)
+        ->delete();
+        // ->update([
+        //     'deleted_at' => date('Y-m-d H:i:s'),
+        // ]);
+
+        return $this->sendResponse();
+    }
+}
